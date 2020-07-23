@@ -27,6 +27,6 @@ app.get('/favicon.ico', (request, response) => {
     response.status(204).end()
 })
 
-app.listen(process.env.PORT || 5000, () => {
+app.listen(process.env.PORT, () => {
     console.log('express in port 5000')
 })
