@@ -99,7 +99,7 @@ async function getKey(key){
             'Content-Type': 'application/json'
         }
     }
-    let response = await fetch('/'+key, options)
+    let response = await fetch('/keys/'+key, options)
     console.log(response)
 }
 
