@@ -3,6 +3,13 @@ let app = express()
 
 let router = express.Router();
 
+app.use(function(req, res, next){
+    if(req.originalUrl && req.originalUrl.split('/').pop() === 'favicon.ico'){
+        res.sendStatus(204);
+    }
+    return next()
+})
+
 app.get('/clientkey', (request, response) => {
     let clientkey = process.env.CLIENT_KEY
     console.log('clientkey')
