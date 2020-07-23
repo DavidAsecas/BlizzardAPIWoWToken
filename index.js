@@ -7,8 +7,8 @@ setInterval(() => {
 }, 1200000)
 
 async function getToken() {
-    let key = 'key'
-    let secret = 'secret'
+    let key = process.env.CLIENT_KEY
+    let secret = process.env.CLIENT_SECRET
     let response = await fetch('https://eu.battle.net/oauth/token', {
         method: 'POST',
         body: 'grant_type=client_credentials&client_id=' + key + '&client_secret=' + secret,
@@ -25,7 +25,7 @@ async function getToken() {
 function firebaseConfiguration() {
     // Your web app's Firebase configuration
     var firebaseConfig = {
-        apiKey: "key",
+        apiKey: process.env.API_KEY,
         authDomain: "wowtoken.firebaseapp.com",
         databaseURL: "https://wowtoken.firebaseio.com",
         projectId: "wowtoken",
