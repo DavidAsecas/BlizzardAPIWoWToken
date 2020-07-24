@@ -1,105 +1,21 @@
-let database;
 let tokenDataArray
-firebaseConfiguration();
-sequence();
-setInterval(() => {
-    sequence();
-}, 1200000)
+init()
 
-async function getToken() {
-    let key = await getKey('clientkey')
-    let secret = await getKey('clientsecret')
-    let response = await fetch('https://eu.battle.net/oauth/token', {
-        method: 'POST',
-        body: 'grant_type=client_credentials&client_id=' + key + '&client_secret=' + secret,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'cache-control': 'no-cache'
-        }
-    })
-    let json = await response.json()
-    return json.access_token
-}
-
-// firebaseConfiguration()
-async function firebaseConfiguration() {
-    // Your web app's Firebase configuration
-    var firebaseConfig = {
-        apiKey: await getKey('apikey'),
-        authDomain: "wowtoken.firebaseapp.com",
-        databaseURL: "https://wowtoken.firebaseio.com",
-        projectId: "wowtoken",
-        storageBucket: "wowtoken.appspot.com",
-        messagingSenderId: "286941231448",
-        appId: "1:286941231448:web:13d53f9f83d5ab1ffc4d2d",
-        measurementId: "G-3DB3XT1XP6"
-    };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    database = firebase.database();
-    let ref = database.ref('tokenData');
-    ref.on('value', gotTokenData, function () {
-        console.error('no data')
-    })
-}
-
-function pushTokenData(tokenData) {
-    let ref = database.ref('tokenData')
-    ref.orderByChild('date').equalTo(tokenData.date).once('value').then(snap =>{
-        if(!snap.exists()){
-            ref.push(tokenData)
-        }
-    })
-}
-
-function gotTokenData(data) {
-    tokenDataArray = []
-    let tokensData = data.val()
-    console.log(tokensData)
-    let keys = Object.keys(tokensData)
-    for (let i = 0; i < keys.length; i++) {
-        let k = keys[i]
-        let price = tokensData[k].price
-        let date = tokensData[k].date
-        tokenDataArray.push({
-            x: moment(date),
-            y: price
-        })
-    }
+async function init(){
+    tokenDataArray = await getData()
+    console.log(tokenDataArray)
     chart()
 }
 
-async function getWowTokenPrize(accessToken) {
-    let response = await fetch('https://eu.api.blizzard.com/data/wow/token/index?namespace=dynamic-eu', {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'authorization': 'bearer ' + accessToken
-        }
-    })
-    let json = await response.json();
-    let tokenData = {
-        price: json.price / 10000,
-        date: json.last_updated_timestamp
-    }
-    return tokenData;
-}
-
-async function sequence() {
-    let accesToken = await getToken();
-    let tokenData = await getWowTokenPrize(accesToken);
-    pushTokenData(tokenData)
-}
-
-async function getKey(key){
+async function getData(){
     let options = {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
         }
     }
-    let response = await fetch('/keys/'+key, options)
+    let response = await fetch('api/tokenData', options)
+    console.log(response)
     return await response.json()
 }
 
