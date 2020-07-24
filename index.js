@@ -55,6 +55,7 @@ function pushTokenData(tokenData) {
 function gotTokenData(data) {
     tokenDataArray = []
     let tokensData = data.val()
+    console.log(tokensData)
     let keys = Object.keys(tokensData)
     for (let i = 0; i < keys.length; i++) {
         let k = keys[i]
@@ -88,7 +89,6 @@ async function getWowTokenPrize(accessToken) {
 async function sequence() {
     let accesToken = await getToken();
     let tokenData = await getWowTokenPrize(accesToken);
-    console.log(tokenData)
     pushTokenData(tokenData)
 }
 
@@ -100,14 +100,13 @@ async function getKey(key){
         }
     }
     let response = await fetch('/keys/'+key, options)
-    console.log(response)
+    return await response.json()
 }
 
 function chart() {
     var ctx = document.getElementById('chart').getContext('2d');
     ctx.canvas.width = 1000;
     ctx.canvas.height = 300;
-    console.log(tokenDataArray)
     var cfg = {
         data: {
             datasets: [{

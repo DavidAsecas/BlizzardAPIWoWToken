@@ -1,7 +1,7 @@
 let express = require('express')
 let app = express()
-var favicon = require('serve-favicon')
-const { resolve } = require("path");
+require('dotenv').config();
+
 let router = express.Router();
 
 app.use(express.static(__dirname));
@@ -15,19 +15,19 @@ app.use(express.static(__dirname));
 
 router.get('/clientkey', (request, response) => {
     let clientkey = process.env.CLIENT_KEY
-    console.log('clientkey')
+    console.log('clientkey: ',clientkey)
     response.json(clientkey)
 })
 
 router.get('/clientsecret', (request, response) => {
     let clientsecret = process.env.CLIENT_SECRET
-    console.log('clientsecret')
+    console.log('clientsecret:', clientsecret)
     response.json(clientsecret)
 })
 
 router.get('/apikey', (request, response) => {
     let apikey = process.env.API_KEY
-    console.log('apikey')
+    console.log('apikey: ', apikey)
     response.json(apikey)
 })
 
@@ -42,7 +42,7 @@ router.get('/apikey', (request, response) => {
 //     response.sendStatus(200)
 // })
 
-app.all("*", (req, res) => res.sendFile(resolve("index.html")));
+// app.get("*", (req, res) => res.sendFile(resolve("index.html")));
 
 app.use('/keys', router)
 
