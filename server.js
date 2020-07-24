@@ -1,17 +1,14 @@
 let express = require('express')
 let app = express()
 var favicon = require('serve-favicon')
-var path = require('path')
-
+const { resolve } = require("path");
 let router = express.Router();
 
-// app.use(function (req, res, next) {
-//     res.setHeader("Content-Security-Policy", "default-src 'self' ");
+app.use(express.static(__dirname));
+// app.get('/', function (req, res, next) {
+//     res.setHeader("Content-Security-Policy", "img-src 'self' ");
 //     console.log('use')
-//     if(req.originalUrl === '/favicon.ico'){
-//         res.sendStatus(204)
-//     }
-//     return next()
+//     res.status(200).send()
 // })
 
 // app.use(favicon(path.join(__dirname, 'favicon.ico')))
@@ -44,6 +41,8 @@ router.get('/apikey', (request, response) => {
 //     console.log('/')
 //     response.sendStatus(200)
 // })
+
+app.all("*", (req, res) => res.sendFile(resolve("index.html")));
 
 app.use('/keys', router)
 
